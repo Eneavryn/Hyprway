@@ -1,0 +1,167 @@
+REQUIRED PACKAGES FOR hyprland.lua (Noctalia v4 compatible)
+CachyOS / Arch — pacman + yay (AUR)
+=============================================================
+
+1) CORE SHELL RUNTIME (AUR — required)
+-------------------------------------------------------------
+yay -S noctalia-qs noctalia-shell
+
+  - noctalia-qs     : Noctalia's own Quickshell fork. Provides the
+                       `qs` binary used by every `qs -c noctalia-shell
+                       ipc call ...` command in the config.
+  - noctalia-shell  : The actual shell config loaded by `qs -c noctalia-shell`.
+
+
+2) TERMINAL / FILE MANAGER / LAUNCHER
+-------------------------------------------------------------
+yay -S alacritty dolphin wofi
+
+  - alacritty  : $terminal, bound to SUPER+Q
+  - dolphin    : $fileManager, bound to SUPER+E
+  - wofi       : defined as $menu but NOT bound to any key in this
+                 file (dead variable unless used elsewhere) —
+                 only install if you actually use it somewhere else
+
+
+3) CLIPBOARD
+-------------------------------------------------------------
+yay -S wl-clipboard cliphist
+
+  - wl-clipboard : provides wl-paste / wl-copy, used in the autostart
+                   block and the screenshot bind
+  - cliphist     : clipboard history backend fed by wl-paste --watch
+
+
+4) MEDIA KEYS / HARDWARE CONTROLS
+-------------------------------------------------------------
+yay -S wireplumber brightnessctl playerctl
+
+  - wireplumber     : provides wpctl, used for volume up/down/mute binds
+  - brightnessctl   : brightness up/down binds
+  - playerctl       : next / previous / play-pause media binds
+
+
+5) SCREENSHOT PIPELINE
+-------------------------------------------------------------
+yay -S grim slurp satty
+
+  - grim   : screen capture
+  - slurp  : region selector (feeds grim -g)
+  - satty  : annotation/editor satty opens into before copy to clipboard
+
+
+6) OPTIONAL — SHUTDOWN HELPER
+-------------------------------------------------------------
+yay -S hyprshutdown
+
+  - Used in the SUPER+M bind, but has a fallback to
+    `hyprctl dispatch exit` if not installed.
+  - OPTIONAL — not required for the config to work.
+
+
+7) CURSOR & ICON THEMES
+-------------------------------------------------------------
+yay -S volantes-cursors nordzy-icon-theme
+
+  - volantes_cursors : set via HYPRCURSOR_THEME / XCURSOR_THEME
+  - Nordzy-dark       : icon theme set via QS_ICON_THEME
+                        (icon theme, distinct from any Nordzy CURSOR
+                        package — don't mix them up)
+
+  ⚠️ NOTE: exact AUR package names for these two vary by maintainer —
+  there are multiple competing packages for both Volantes cursors and
+  Nordzy icons. Before installing, run:
+
+      yay -Ss volantes
+      yay -Ss nordzy
+
+  ...and confirm which package actually installs a folder matching the
+  theme names used in the config (volantes_cursors / Nordzy-dark).
+  Installing the wrong variant will silently fail to apply (no error,
+  the theme just won't show up).
+
+
+8) GREETD + TUIGREET LOGIN MANAGER (using the provided start-hyprland wrapper)
+-------------------------------------------------------------
+greetd and tuigreet are both in the official Arch "extra" repo, so
+no AUR helper is strictly needed for these two (pacman works fine,
+yay works fine too since it falls back to pacman for repo packages):
+
+    sudo pacman -S greetd greetd-tuigreet
+
+  - greetd          : the login manager daemon (TTY-based, no GUI)
+  - greetd-tuigreet : the terminal-UI greeter frontend for greetd
+
+  start-hyprland is already provided as a wrapper script (ships
+  alongside Hyprland on CachyOS) — no need to write or install
+  anything extra for it.
+
+--- Step 1: Edit ONLY the command line in /etc/greetd/config.toml ---
+
+Open the existing file:
+
+    sudo nano /etc/greetd/config.toml
+
+Leave everything else in the file as-is. Just change the
+`command =` line under [default_session] to:
+
+    command = "tuigreet --time --cmd start-hyprland"
+
+--- Step 2: Enable greetd
+--- but before that stop any previous running display manager
+
+    sudo systemctl enable --now greetd.service
+
+(If another display manager like sddm or gdm is currently enabled,
+disable it first so it doesn't conflict — e.g.
+`sudo systemctl disable sddm.service`.)
+
+--- Step 3: Reboot and verify ---
+
+    sudo reboot
+
+You should land on the tuigreet TUI login prompt with a clock
+(--time), and logging in will launch start-hyprland.
+
+--- Troubleshooting ---
+
+  - Stuck on a blank/black screen after login: check
+    `journalctl -b -u greetd` for errors.
+
+  - Multiple "graphical login" services fighting each other on boot:
+    only greetd.service should be enabled — nothing else should be
+    aliased to display-manager.service at the same time.
+
+
+9) ALREADY COVERED — NO SEPARATE INSTALL NEEDED
+-------------------------------------------------------------
+  - hyprctl, hyprcursor  : built into Hyprland itself
+  - require("noctalia")  : sources Noctalia's own generated color
+                            template file, nothing extra to install
+
+
+=============================================================
+QUICK ONE-LINER (everything except the two theme packages,
+since those need manual AUR name verification first):
+
+=============================================================
+yay -S noctalia-qs noctalia-shell alacritty dolphin wofi \
+       wl-clipboard cliphist wireplumber brightnessctl playerctl \
+       grim slurp satty hyprshutdown
+
+
+=============================================================
+OPTIONAL FOLLOW-UP CHECK FOR DOLPHIN
+=============================================================
+Bare `dolphin` on Arch sometimes ships without thumbnail generation
+or network-share (SMB/SFTP) support out of the box. If you notice
+missing thumbnails or can't browse network shares from Dolphin,
+consider also installing:
+
+  yay -S kio-extras dolphin-plugins ffmpegthumbs
+
+  - kio-extras      : network protocols (smb://, sftp://, etc.) and
+                       extra thumbnailers for Dolphin
+  - dolphin-plugins : extra Dolphin context-menu plugins (git status,
+                       compress/extract helpers, etc.)
+  - ffmpegthumbs     : video file thumbnail previews in Dolphin
