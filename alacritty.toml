@@ -1,0 +1,175 @@
+[env]
+TERM = "xterm-256color"
+WINIT_X11_SCALE_FACTOR = "1"
+
+
+[window]
+dynamic_padding = true
+decorations = "full"
+title = "Alacritty@CachyOS"
+opacity = 0.9
+decorations_theme_variant = "Dark"
+blur=true
+
+[window.padding]
+x = 8
+y = 8
+
+[window.dimensions]
+columns = 100
+lines = 30
+
+[window.class]
+instance = "Alacritty"
+general = "Alacritty"
+
+[scrolling]
+history = 10000
+multiplier = 3
+
+[colors]
+draw_bold_text_with_bright_colors = true
+
+[colors.primary]
+background = "#14151C"
+foreground = "#C0C8D1"
+
+[colors.normal]
+black   = "#2C313A" # soft structural shadow
+red     = "#C4888A" # pastel rust / dusty rose
+green   = "#8BA39A" # muted overcast sage
+yellow  = "#C6AE86" # dusty pale sand/gold
+blue    = "#879CB3" # soft twilight steel blue
+magenta = "#B69BB3" # faint mauve clouds
+cyan    = "#85B0B5" # icy pastel teal
+white   = "#BCC4CD" # weathered metallic silver
+
+[colors.bright]
+black   = "#3E4653" # lifted mid-tone shadow
+red     = "#D8989A" # brighter pastel rose
+green   = "#9EBEB1" # soft light sage
+yellow  = "#DBC39A" # pale morning gold
+blue    = "#9BB5D1" # clear pastel blue
+magenta = "#C8ABC5" # soft lilac
+cyan    = "#99CBD1" # fresh pastel teal
+white   = "#E0E7F0" # pale cloud white
+
+[font]
+size = 10
+
+[font.offset]
+x = 1  # Adds 1 extra pixel of space between each letter
+y = 2  # Adds a bit of vertical space for readability
+
+[font.normal]
+family = "monospace"
+style = "Regular"
+
+[font.bold]
+family = "monospace"
+style = "Bold"
+
+[font.italic]
+family = "monospace"
+style = "Italic"
+
+[font.bold_italic]
+family = "monospace"
+style = "Bold Italic"
+
+[selection]
+semantic_escape_chars = ",│`|:\"' ()[]{}<>\t"
+save_to_clipboard = true
+
+[cursor]
+style = "Underline"
+vi_mode_style = "None"
+unfocused_hollow = true
+thickness = 0.15
+
+[mouse]
+hide_when_typing = true
+
+[[mouse.bindings]]
+mouse = "Middle"
+action = "PasteSelection"
+
+[keyboard]
+[[keyboard.bindings]]
+key = "Paste"
+action = "Paste"
+
+[[keyboard.bindings]]
+key = "Copy"
+action = "Copy"
+
+[[keyboard.bindings]]
+key = "L"
+mods = "Control"
+action = "ClearLogNotice"
+
+[[keyboard.bindings]]
+key = "L"
+mods = "Control"
+mode = "~Vi"
+chars = "\f"
+
+[[keyboard.bindings]]
+key = "PageUp"
+mods = "Shift"
+mode = "~Alt"
+action = "ScrollPageUp"
+
+[[keyboard.bindings]]
+key = "PageDown"
+mods = "Shift"
+mode = "~Alt"
+action = "ScrollPageDown"
+
+[[keyboard.bindings]]
+key = "Home"
+mods = "Shift"
+mode = "~Alt"
+action = "ScrollToTop"
+
+[[keyboard.bindings]]
+key = "End"
+mods = "Shift"
+mode = "~Alt"
+action = "ScrollToBottom"
+
+[[keyboard.bindings]]
+key = "V"
+mods = "Control|Shift"
+action = "Paste"
+
+[[keyboard.bindings]]
+key = "C"
+mods = "Control|Shift"
+action = "Copy"
+
+[[keyboard.bindings]]
+key = "F"
+mods = "Control|Shift"
+action = "SearchForward"
+
+[[keyboard.bindings]]
+key = "B"
+mods = "Control|Shift"
+action = "SearchBackward"
+
+[[keyboard.bindings]]
+key = "C"
+mods = "Control|Shift"
+mode = "Vi"
+action = "ClearSelection"
+
+[[keyboard.bindings]]
+key = "Key0"
+mods = "Control"
+action = "ResetFontSize"
+
+[general]
+import = ["~/.config/alacritty/themes/noctalia.toml"]
+live_config_reload = true
+working_directory = "None"
